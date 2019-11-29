@@ -1,0 +1,88 @@
+#include <kipr/botball.h>
+int f_eye = 0; // the location of the front sensor
+int l_motor = 3; // the location of the left motor
+int r_motor = 0; // the location of the right motor
+int tophat = 5; // the location of the top hat sensor
+int fspeed = 95; // the faster speed during the loop
+int speed = 50; // the start speed
+int sspeed = 20; // the slower speed during the loop
+int servo = 0; // location of the servo
+int target = 2000; // the target the sensors are looking for
+int pause = 1000;
+
+int main(){
+ 
+  Find(); // do and complete Find
+  ao(); // shut everything off after Find is completed
+  Follow(); // do and complete follow
+  ao(); // shut everything off after follow is complete
+  wave(); // do and complete wave
+   
+}
+
+// function def
+void start(){ // gives start a command
+motor(l_motor,speed);
+motor(r_motor,speed/4); // these control the motor and make the robot turn left 
+}
+ 
+void forwards(){ // gives forwards a command 
+ motor(l_motor,speed);
+ motor(r_motor,speed); // these control the motor and make the robot go forwards
+}
+
+void rearLeft(){  // gets the robot to move a little to the left
+ motor(l_motor,fspeed);
+ motor(r_motor,sspeed);
+}
+ 
+void rearRight(){ // gets the robot to move a little to the right
+ motor(l_motor,sspeed);
+ motor(r_motor,fspeed);
+}
+
+void Find(){ 
+  while (analog(tophat) <= target){
+  start();
+    printf("seeking line!/n");
+  }
+   printf("found line!/n");
+ 
+}
+
+void Follow(){
+
+while(analog(f_eye) <= target){
+    
+  if (analog(tophat) >= target){
+     rearRight();//veering left away from wall
+        printf("veer away right!/n");
+  }
+ 
+    if (analog(tophat) <= target){
+     rearLeft();//veering left away from wall
+        printf("veer away left!/n");
+ 
+    }
+    }
+}
+ 
+  void wave(){
+ 
+ while(analog(f_eye) >= target){
+ 
+enable_servos();
+ printf("Waving!/n");
+set_servo_position(0, 1500);
+msleep(pause);
+set_servo_position(0, 925);
+msleep(pause);
+set_servo_position(0, 1500);
+msleep(pause);
+disable_servos();
+
+  return 0;
+}
+ 
+  }
+
